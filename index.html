@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header>
+  <h1>🏋️ Dashboard</h1>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="history.html">History</a>
+    <a href="stats.html">Stats</a>
+  </nav>
+
+ </header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>➕ Add Workout</h2>
+
+    <input id="workout" placeholder="Workout">
+    <input id="mins" placeholder="Minutes">
+
+    <button onclick="addWorkout()">Add Workout</button>
+    </div>
+
+  <div class="card">
+    <h2>🔥 Today</h2>
+    <div id="today"></div>
+  </div>
+</div>
+<script>
+
+/* ================= USER ================= */
+let user = localStorage.getItem("username") || "guest";
+
+document.getElementById("userName").innerText = user;
+
+/* ================= KEYS ================= */
+let kcalKey = user + "_kcal";
+let historyKey = user + "_history";
+
+/* INIT */
+if (!localStorage.getItem(kcalKey)) {
+  localStorage.setItem(kcalKey, "120");
+}
+
+if (!localStorage.getItem(historyKey)) {
+  localStorage.setItem(historyKey, "[]");
+}
+
+/* UPDATE KCAL */
+function updateKcal() {
+  document.getElementById("kcal").innerText =
+    localStorage.getItem(kcalKey);
+}
+
+updateKcal();
+
+/* ADD WORKOUT */
+function addWorkout() {
+  let w = document.getElementById("workout").value;
+  let m = parseInt(document.getElementById("mins").value);
+
+  if (!w || !m) return;
+
+  let burned = m * 5;
+
+  document.getElementById("today").innerHTML +=
+    `<p>🏋️ ${w} - ${m} min = ${burned} kcal</p>`;
+
+  let kcal = parseInt(localStorage.getItem(kcalKey));
+  kcal += burned;
+
+  localStorage.setItem(kcalKey, kcal);
+
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
+  history.push({
+    workout: w,
+    minutes: m,
+    kcal: burned
+  });
+
+  localStorage.setItem(historyKey, JSON.stringify(history));
+
+  updateKcal();
+}
+
+</script>
+
+</body>
+</html>
