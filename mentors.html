@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fitness Mentors</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>👨‍🏫 Fitness Mentors Directory</h1>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="foods.html">Fitness & Food</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- MENTOR LIST -->
+  <div class="card" onclick="showProfile('alex')">
+    <img src="https://tse3.mm.bing.net/th/id/OIP.FlBuCuX15VkBaMB0IPN08QHaHa?pid=ImgDet&w=184&h=184&c=7&o=7&rm=3" width="100%">
+    <h2>🏋️ Coach Alex</h2>
+    <p>Strength Training Expert</p>
+    <p>📞 +91 90000 11111</p>
+  </div>
+
+  <div class="card" onclick="showProfile('mia')">
+    <img src="https://static.vecteezy.com/system/resources/previews/049/098/622/non_2x/a-joyful-fitness-enthusiast-enjoys-her-workout-in-a-vibrant-gym-photo.jpeg" width="100%">
+    <h2>🏃 Coach Mia</h2>
+    <p>Cardio & Fat Loss Specialist</p>
+    <p>📞 +91 90000 22222</p>
+  </div>
+
+  <div class="card" onclick="showProfile('zen')">
+    <img src="https://img.freepik.com/premium-photo/fitness-enthusiasts-smile-motivates-clients-embrace-healthy-lifestyle_118124-146882.jpg" width="100%">
+    <h2>🧘 Coach Zen</h2>
+    <p>Recovery & Yoga Expert</p>
+    <p>📞 +91 90000 33333</p>
+  </div>
+
+  <!-- PROFILE VIEW -->
+  <div class="card" id="profileBox">
+    <h2>👤 Mentor Profile</h2>
+    <p>Select a mentor to view details</p>
+  </div>
+
+  <!-- GOOGLE FORM SECTION -->
+  <div class="card">
+    <h2>📩 Send Query (Google Form)</h2>
+
+    <p>Submit your question to mentors:</p>
+
+    <a href=https://docs.google.com/forms/d/e/1FAIpQLSdJZQi8ilitKdA2qddtKZVeZZP4OA28-420qcgN3P2aUeeT5A/viewform?usp=publish-editortarget="_blank">
+      👉 Open Google Form
+    </a>
+
+    <p style="font-size:12px;color:gray;">
+      
+    </p>
+  </div>
+
+</div>
+
+<script>
+function showProfile(name){
+
+  let data = {
+    alex: "🏋️ Alex is a strength coach focused on muscle gain, weight training, and gym programming.",
+    mia: "🏃 Mia specializes in fat loss, cardio workouts, HIIT training, and endurance building.",
+    zen: "🧘 Zen focuses on recovery, flexibility, yoga, breathing techniques, and injury prevention."
+  };
+
+  document.getElementById("profileBox").innerHTML = `
+    <h2>👤 Profile Details</h2>
+    <p>${data[name]}</p>
+  `;
+}
+</script>
+
+</body>
+</html>
