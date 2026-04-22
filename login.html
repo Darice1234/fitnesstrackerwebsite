@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body{
+      font-family: Arial;
+      margin:0;
+      background: linear-gradient(135deg,#6a00ff,#b300ff);
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:white;
+    }
+
+    .box{
+      background:white;
+      color:black;
+      padding:25px;
+      border-radius:15px;
+      width:320px;
+      text-align:center;
+    }
+
+    input{
+      width:100%;
+      padding:10px;
+      margin-top:10px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      box-sizing:border-box;
+    }
+
+    button{
+      width:100%;
+      padding:10px;
+      margin-top:12px;
+      background:#2563eb;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    .links{
+      margin-top:10px;
+      font-size:13px;
+    }
+
+    .links a{
+      color:#2563eb;
+      cursor:pointer;
+      text-decoration:none;
+      margin:0 5px;
+    }
+
+    #msg{
+      margin-top:10px;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h2>🏋️ Fitness Login</h2>
+
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+
+  <div class="links">
+    <a onclick="forgotPassword()">Forgot Password?</a> |
+    <a onclick="createAccount()">Create Account</a>
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   LOGIN FUNCTION
+========================= */
+function login(){
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
+  let msg = document.getElementById("msg");
+
+  if(!u || !p){
+    msg.style.color="red";
+    msg.innerText="Enter username & password";
+    return;
+  }
+
+  // check saved user
+  let savedUser = localStorage.getItem("username");
+  let savedPass = localStorage.getItem("password");
+
+  if(savedUser && savedPass){
+    if(u !== savedUser || p !== savedPass){
+      msg.style.color="red";
+      msg.innerText="Invalid credentials";
+      return;
+    }
+  }
+
+  /* =========================
+     SET CURRENT USER
+  ========================= */
+  localStorage.setItem("username", u);
+  localStorage.setItem("password", p);
+
+  // 🔥 INIT USER FITNESS DATA
+  if(!localStorage.getItem(u + "_kcal")){
+    localStorage.setItem(u + "_kcal", "120");
+  }
+
+  if(!localStorage.getItem(u + "_history")){
+    localStorage.setItem(u + "_history", "[]");
+  }
+
+  msg.style.color="green";
+  msg.innerText="Login successful...";
+
+  setTimeout(()=>{
+    window.location.href="index.html";
+  },1000);
+}
+
+/* =========================
+   CREATE ACCOUNT
+========================= */
+function createAccount(){
+  let u = prompt("Enter new username:");
+  let p = prompt("Create password:");
+
+  if(!u || !p){
+    alert("⚠️ Please fill both fields");
+    return;
+  }
+
+  localStorage.setItem("username", u);
+  localStorage.setItem("password", p);
+
+  // init fitness data
+  localStorage.setItem(u + "_kcal", "120");
+  localStorage.setItem(u + "_history", "[]");
+
+  alert("✅ Account created successfully!");
+}
+
+/* =========================
+   FORGOT PASSWORD
+========================= */
+function forgotPassword(){
+  let u = prompt("Enter your username:");
+
+  let savedUser = localStorage.getItem("username");
+  let savedPass = localStorage.getItem("password");
+
+  if(u === savedUser){
+    alert("🔑 Your password is: " + savedPass);
+  } else {
+    alert("❌ User not found");
+  }
+}
+
+</script>
+
+</body>
+</html>
