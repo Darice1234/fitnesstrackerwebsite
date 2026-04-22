@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stats</title>
+  <link rel="stylesheet" href="style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-size: 20px;
+      margin: 0;
+      font-family: Arial;
+
+      background: linear-gradient(135deg, #007bff, #00c6ff, #007bff);
+      background-size: 400% 400%;
+      animation: shimmer 8s ease infinite;
+      color: white;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 { font-size: 3rem; text-align:center; }
+    h2 { font-size: 2rem; }
+
+    nav {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    nav a {
+      font-size: 1.1rem;
+      margin: 0 10px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 25px;
+      margin-top: 20px;
+      border-radius: 15px;
+
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>📊 Analytics Dashboard</h1>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="history.html">History</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🔥 Calories Graph</h2>
+    <canvas id="chart"></canvas>
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   USER SYSTEM
+========================= */
+let user = localStorage.getItem("username") || "guest";
+
+/* =========================
+   USER HISTORY KEY
+========================= */
+let historyKey = user + "_history";
+
+/* =========================
+   LOAD DATA SAFELY
+========================= */
+let history = localStorage.getItem(historyKey);
+
+if (!history) {
+  history = [];
+} else {
+  history = JSON.parse(history);
+}
+
+if (!Array.isArray(history)) {
+  history = [];
+}
+
+/* =========================
+   PREPARE CHART DATA
+========================= */
+let labels = history.map(item => item.workout);
+let calories = history.map(item => item.kcal);
+
+/* if no data */
+if (labels.length === 0) {
+  labels = ["No Data"];
+  calories = [0];
+}
+
+/* =========================
+   CHART
+========================= */
+new Chart(document.getElementById("chart"), {
+  type: "bar",
+  data: {
+    labels: labels,
+    datasets: [{
+      label: "Calories Burned",
+      data: calories,
+      backgroundColor: "#ffffff"
+    }]
+  }
+});
+
+</script>
+
+</body>
+</html>
