@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-size: 20px;
+      font-family: Arial, sans-serif;
+
+      background: linear-gradient(135deg, #6a00ff, #b300ff, #6a00ff);
+      background-size: 400% 400%;
+      animation: glowBG 8s ease infinite;
+
+      color: white;
+      text-align: center;
+    }
+
+    @keyframes glowBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 3rem;
+      padding-top: 20px;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 25px;
+      margin-top: 20px;
+      border-radius: 15px;
+
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #timer {
+      font-size: 3rem;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🧍 Profile</h1>
+</header>
+
+<div class="container">
+
+  <!-- PROFILE -->
+  <div class="card">
+    <h2>👤 User Profile</h2>
+    <p id="userData">Welcome! Stay fit and active 💪</p>
+  </div>
+
+  <!-- TIMER -->
+  <div class="card">
+    <h2>⏱ Activity Timer</h2>
+    <h3 id="activity">Select Activity</h3>
+    <div id="timer">00:00</div>
+
+    <button onclick="startTimer()">▶ Start</button>
+    <button onclick="stopTimer()">⏸ Stop</button>
+    <button onclick="resetTimer()">🔄 Reset</button>
+  </div>
+
+  <!-- SPORTS -->
+  <div class="card">
+    <h2>🏅 Sports</h2>
+
+    <button onclick="setActivity('Running')">🏃 Running</button>
+    <button onclick="setActivity('Cricket')">🏏 Cricket</button>
+    <button onclick="setActivity('Football')">⚽ Football</button>
+    <button onclick="setActivity('Cycling')">🚴 Cycling</button>
+  </div>
+
+  <!-- FITNESS GAMES -->
+  <div class="card">
+    <h2>🎮 Fitness Games</h2>
+
+    <button onclick="startGame('Push-up Challenge')">💪 Push-ups</button>
+    <button onclick="startGame('Squat Challenge')">🏋️ Squats</button>
+    <button onclick="startGame('Jump Challenge')">🦘 Jump</button>
+  </div>
+
+  <!-- GAME INFO -->
+  <div class="card" id="gameBox">
+    <h2>🎯 Game Info</h2>
+    <p>Select a game to begin</p>
+  </div>
+
+</div>
+
+<script>
+let seconds = 0;
+let timer = null;
+
+/* ✅ LOAD LOGIN NAME */
+let name = localStorage.getItem("username");
+if (name) {
+  document.getElementById("userData").innerHTML =
+    "👋 Welcome, <b>" + name + "</b> 💪";
+}
+
+/* TIMER */
+function updateDisplay() {
+  let m = Math.floor(seconds / 60);
+  let s = seconds % 60;
+
+  document.getElementById("timer").innerText =
+    String(m).padStart(2, '0') + ":" +
+    String(s).padStart(2, '0');
+}
+
+function startTimer() {
+  if (timer) return;
+  timer = setInterval(() => {
+    seconds++;
+    updateDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timer);
+  timer = null;
+}
+
+function resetTimer() {
+  stopTimer();
+  seconds = 0;
+  updateDisplay();
+}
+
+/* SPORTS */
+function setActivity(name) {
+  document.getElementById("activity").innerText = name;
+  resetTimer();
+}
+
+/* GAMES */
+function startGame(game) {
+  document.getElementById("activity").innerText = game;
+
+  document.getElementById("gameBox").innerHTML = `
+    <h2>${game}</h2>
+    <p>Start the timer and complete as many reps as possible!</p>
+  `;
+
+  resetTimer();
+}
+</script>
+
+</body>
+</html>
