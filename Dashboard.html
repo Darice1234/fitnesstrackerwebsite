@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header>
+  <h1>🏋️ Dashboard</h1>
+
+  <nav>
+    <a href="Dashboard.html">Dashboard</a>
+    <a href="history.html">History</a>
+    <a href="stats.html">Stats</a>
+    <a href="index.html">Login</a>
+    
+    <a href="foods.html">Foods</a>
+     <a href="mentors.html">Mentors</a>
+     <a href="goals.html">goals</a>
+     <a href="profile.html">profile</a>
+
+
+
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <p id="userName"></p>
+    <p>🔥 Total Calories: <span id="kcal">0</span></p>
+  </div>
+
+  <div class="card">
+    <h2>➕ Add Workout</h2>
+
+    <input id="workout" placeholder="Workout">
+    <input id="mins" placeholder="Minutes" type="number">
+
+    <button onclick="addWorkout()">Add Workout</button>
+  </div>
+
+  <div class="card">
+    <h2>🔥 Today</h2>
+    <div id="today"></div>
+  </div>
+
+</div>
+
+<script>
+
+/* ================= USER ================= */
+let username = localStorage.getItem("username") || "guest";
+document.getElementById("userName").innerText = "👤 " + username;
+
+/* ================= UNIQUE USER KEYS ================= */
+let userKey = "fitness_" + username.toLowerCase();
+let kcalKey = userKey + "_kcal";
+let historyKey = userKey + "_history";
+
+/* ================= INIT ================= */
+if (localStorage.getItem(kcalKey) === null) {
+  localStorage.setItem(kcalKey, "0");
+}
+
+if (localStorage.getItem(historyKey) === null) {
+  localStorage.setItem(historyKey, JSON.stringify([]));
+}
+
+/* ================= SHOW KCAL ================= */
+function updateKcal() {
+  document.getElementById("kcal").innerText =
+    localStorage.getItem(kcalKey);
+}
+
+/* ================= LOAD HISTORY ================= */
+function loadToday() {
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+  let box = document.getElementById("today");
+
+  box.innerHTML = "";
+
+  history.forEach(item => {
+    box.innerHTML += `
+      <p>🏋️ ${item.workout} - ${item.minutes} min = ${item.kcal} kcal</p>
+    `;
+  });
+}
+
+/* ================= ADD WORKOUT ================= */
+function addWorkout() {
+
+  let w = document.getElementById("workout").value.trim();
+  let m = parseInt(document.getElementById("mins").value);
+
+  if (!w || isNaN(m)) return;
+
+  let burned = m * 5;
+
+  let kcal = parseInt(localStorage.getItem(kcalKey) || "0");
+  kcal += burned;
+  localStorage.setItem(kcalKey, kcal);
+
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
+  history.push({
+    workout: w,
+    minutes: m,
+    kcal: burned
+  });
+
+  localStorage.setItem(historyKey, JSON.stringify(history));
+
+  updateKcal();
+  loadToday();
+
+  document.getElementById("workout").value = "";
+  document.getElementById("mins").value = "";
+}
+
+/* INIT */
+updateKcal();
+loadToday();
+
+</script>
+
+</body>
+</html>
