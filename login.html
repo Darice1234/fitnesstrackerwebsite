@@ -45,21 +45,15 @@
       cursor:pointer;
     }
 
-    .links{
-      margin-top:10px;
-      font-size:13px;
-    }
-
-    .links a{
-      color:#2563eb;
-      cursor:pointer;
-      text-decoration:none;
-      margin:0 5px;
-    }
-
     #msg{
       margin-top:10px;
       font-size:14px;
+    }
+
+    a{
+      cursor:pointer;
+      color:#2563eb;
+      font-size:13px;
     }
   </style>
 </head>
@@ -77,19 +71,26 @@
 
   <p id="msg"></p>
 
-  <div class="links">
-    <a onclick="forgotPassword()">Forgot Password?</a> |
+  <p>
     <a onclick="createAccount()">Create Account</a>
-  </div>
+  </p>
 
 </div>
 
 <script>
 
-/* =========================
-   LOGIN FUNCTION
-========================= */
+/* ================= USERS DATABASE ================= */
+function getUsers(){
+  return JSON.parse(localStorage.getItem("users")) || {};
+}
+
+function saveUsers(users){
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+/* ================= LOGIN ================= */
 function login(){
+
   let u = document.getElementById("user").value.trim();
   let p = document.getElementById("pass").value.trim();
   let msg = document.getElementById("msg");
@@ -100,31 +101,35 @@ function login(){
     return;
   }
 
-  // check saved user
-  let savedUser = localStorage.getItem("username");
-  let savedPass = localStorage.getItem("password");
+  let users = getUsers();
 
-  if(savedUser && savedPass){
-    if(u !== savedUser || p !== savedPass){
-      msg.style.color="red";
-      msg.innerText="Invalid credentials";
-      return;
-    }
+  /* USER NOT FOUND */
+  if(!users[u]){
+    msg.style.color="red";
+    msg.innerText="User not found";
+    return;
   }
 
-  /* =========================
-     SET CURRENT USER
-  ========================= */
+  /* WRONG PASSWORD */
+  if(users[u] !== p){
+    msg.style.color="red";
+    msg.innerText="Invalid password";
+    return;
+  }
+
+  /* SUCCESS LOGIN */
   localStorage.setItem("username", u);
-  localStorage.setItem("password", p);
 
-  // 🔥 INIT USER FITNESS DATA
-  if(!localStorage.getItem(u + "_kcal")){
-    localStorage.setItem(u + "_kcal", "120");
+  /* INIT USER DATA KEYS */
+  let kcalKey = "fitness_" + u + "_kcal";
+  let historyKey = "fitness_" + u + "_history";
+
+  if(localStorage.getItem(kcalKey) === null){
+    localStorage.setItem(kcalKey, "0");
   }
 
-  if(!localStorage.getItem(u + "_history")){
-    localStorage.setItem(u + "_history", "[]");
+  if(localStorage.getItem(historyKey) === null){
+    localStorage.setItem(historyKey, JSON.stringify([]));
   }
 
   msg.style.color="green";
@@ -135,42 +140,28 @@ function login(){
   },1000);
 }
 
-/* =========================
-   CREATE ACCOUNT
-========================= */
+/* ================= CREATE ACCOUNT ================= */
 function createAccount(){
-  let u = prompt("Enter new username:");
-  let p = prompt("Create password:");
+
+  let u = prompt("Enter username:");
+  let p = prompt("Enter password:");
 
   if(!u || !p){
-    alert("⚠️ Please fill both fields");
+    alert("Please fill both fields");
     return;
   }
 
-  localStorage.setItem("username", u);
-  localStorage.setItem("password", p);
+  let users = getUsers();
 
-  // init fitness data
-  localStorage.setItem(u + "_kcal", "120");
-  localStorage.setItem(u + "_history", "[]");
-
-  alert("✅ Account created successfully!");
-}
-
-/* =========================
-   FORGOT PASSWORD
-========================= */
-function forgotPassword(){
-  let u = prompt("Enter your username:");
-
-  let savedUser = localStorage.getItem("username");
-  let savedPass = localStorage.getItem("password");
-
-  if(u === savedUser){
-    alert("🔑 Your password is: " + savedPass);
-  } else {
-    alert("❌ User not found");
+  if(users[u]){
+    alert("User already exists!");
+    return;
   }
+
+  users[u] = p;
+  saveUsers(users);
+
+  alert("Account created successfully!");
 }
 
 </script>
