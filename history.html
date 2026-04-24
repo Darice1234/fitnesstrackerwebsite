@@ -3,38 +3,6 @@
 <head>
   <title>History</title>
   <link rel="stylesheet" href="style.css">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: linear-gradient(135deg,#007bff,#00c6ff);
-      color: white;
-    }
-
-    .container { padding: 20px; }
-
-    .card {
-      background: rgba(255,255,255,0.15);
-      padding: 20px;
-      border-radius: 15px;
-    }
-
-    .item {
-      background: rgba(255,255,255,0.2);
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 10px;
-    }
-
-    nav a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-  </style>
 </head>
 
 <body>
@@ -59,8 +27,10 @@
 
 <script>
 
-let user = localStorage.getItem("username") || "guest";
-let historyKey = user + "_history";
+let username = localStorage.getItem("username") || "guest";
+
+let userKey = "fitness_" + username.toLowerCase();
+let historyKey = userKey + "_history";
 
 let history = JSON.parse(localStorage.getItem(historyKey)) || [];
 
@@ -71,7 +41,7 @@ if (history.length === 0) {
 } else {
   history.forEach(item => {
     box.innerHTML += `
-      <div class="item">
+      <div class="card">
         🏋️ ${item.workout}<br>
         ⏱ ${item.minutes} min<br>
         🔥 ${item.kcal} kcal
